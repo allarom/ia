@@ -55,7 +55,7 @@ export default function Form() {
   /* The POST method adds a new entry in the mongodb database. */
   const postData = async (form) => {
     try {
-      const res = await fetch('/api/users', {
+      const res = await fetch('/api/people', {
         method: 'POST',
         headers: {
           Accept: contentType,
