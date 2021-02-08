@@ -1,7 +1,0 @@
-{
-    "name": "ia",
-    "version": 2,
-    "env": {
-      "MONGODB_URI": "@ia"
-    }
-  }
