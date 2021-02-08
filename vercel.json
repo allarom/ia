@@ -1,0 +1,7 @@
+{
+    "name": "iapro",
+    "version": 2,
+    "env": {
+      "MONGODB_URI": "@iapro"
+    }
+  }
