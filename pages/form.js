@@ -37,7 +37,7 @@ export default function Form() {
     e.preventDefault()
     const errs = formValidate()
     if (Object.keys(errs).length === 0) {
-      postData(form)
+     postData(form)
     } else {
       setErrors({ errs })
     }
@@ -55,7 +55,7 @@ export default function Form() {
   /* The POST method adds a new entry in the mongodb database. */
   const postData = async (form) => {
     try {
-      const res = await fetch('/api/people', {
+      const res = await fetch('/api/users', {
         method: 'POST',
         headers: {
           Accept: contentType,
@@ -66,12 +66,11 @@ export default function Form() {
 
       console.log("res", res, form)
 
-      // Throw error with status code in case Fetch API req failed
       if (!res.ok) {
         throw new Error(res.status)
       }
 
-      router.push('/')
+      router.push('/letter')
     } catch (error) {
       setMessage('Failed to add')
     }
@@ -84,7 +83,7 @@ return <div className={styles.wrapper}>
 Your courage and self-sacrifice deserves the highest praise. Please enter few details about you, so we can make your life on Mars as comfortable as possible. </p>
   <p className={styles.text} style={{marginBottom: '70px'}}>Sincerely yours,
   Elon Musk</p>
-<form onSubmit={handleSubmit}>
+<form id='add-form' onSubmit={handleSubmit}>
   <label htmlFor="name">Name:</label> <br></br>
   <input type="text" id="name" name="name" value={form.name}
       onChange={handleChange} required
@@ -111,7 +110,7 @@ Your courage and self-sacrifice deserves the highest praise. Please enter few de
   <input type="text" id="skills" name="skills" required
        minLength="4" maxLength="40" size="20"/>
   <br></br> */}
-  <input type="submit" value="Submit" ></input>
+  <button type="submit" value="Submit" ></button>
   </form>
   </div>
 }

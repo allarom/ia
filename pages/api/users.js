@@ -1,45 +1,35 @@
-// Import Dependencies
-const url = require('url')
-const MongoClient = require('mongodb').MongoClient
+import dbConnect from '../../utils/dbConnect'
+import User from '../../models/User'
 
-// Create cached connection variable
-let cachedDb = null
+export default async function handler(req, res) {
+  const { method } = req
 
-// A function for connecting to MongoDB,
-// taking a single parameter of the connection string
-async function connectToDatabase(uri) {
-  // If the database connection is cached,
-  // use it instead of creating a new connection
-  if (cachedDb) {
-    return cachedDb
+  await dbConnect()
+
+  switch (method) {
+
+    case 'GET':
+      try {
+        const pets = await User.find({}) /* find all the data in our database */
+        res.status(200).json({ success: true, data: pets })
+      } catch (error) {
+        res.status(400).json({ success: false })
+      }
+      break
+    case 'POST':
+      try {
+        const user = await User.create(
+          req.body
+        ) /* create a new model in the database */
+        res.status(201).json({ success: true, data: user })
+        console.log("201", res.status(201).json({ success: true, data: user }))
+      } catch (error) { 
+          console.log(error)
+        res.status(400).json({ success: false })
+      }
+      break
+    default:
+      res.status(400).json({ success: false })
+      break
   }
-
-  // If no connection is cached, create a new one
-  const client = await MongoClient.connect(uri, { useNewUrlParser: true })
-
-  // Select the database through the connection,
-  // using the database path of the connection string
-  const db = await client.db(url.parse(uri).pathname.substr(1))
-
-  // Cache the database connection and return the connection
-  cachedDb = db
-  return db
-}
-
-// The main, exported, function of the endpoint,
-// dealing with the request and subsequent response
-module.exports = async (req, res) => {
-  // Get a database connection, cached or otherwise,
-  // using the connection string environment variable as the argument
-
-  const db = await connectToDatabase(process.env.MONGODB_URI)
-
-  // Select the "users" collection from the database
-  const collection = await db.collection('people')
-
-  // Select the users collection from the database
-  const people = await collection.find({}).toArray()
-
-  // Respond with a JSON string of all users in the collection
-  res.status(200).json({ people })
 }
